@@ -254,6 +254,22 @@ define Device/eap120-v1
 endef
 TARGET_DEVICES += eap120-v1
 
+define Device/eap225od-v1
+  DEVICE_TITLE := TP-LINK EAP225 Outdoor v1
+  MTDPARTS := spi0.0:128k(u-boot)ro,64k(partition-table)ro,64k(product-info)ro,1664k(kernel),14208k(rootfs),192k(config)ro,64k(ART)ro,15872k@0x40000(firmware)
+  IMAGE_SIZE := 15872k
+  DEVICE_PACKAGES := kmod-ath9k kmod-ath10k-ct ath10k-firmware-qca9888-ct
+  BOARDNAME := EAP225OD-V1
+  TPLINK_BOARD_ID := EAP225OD_V1
+  LOADER_TYPE := elf
+  KERNEL := kernel-bin | patch-cmdline | lzma | loader-kernel
+  IMAGES := sysupgrade.bin
+  #IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := append-rootfs | tplink-safeloader sysupgrade | append-metadata | check-size $$$$(IMAGE_SIZE)
+  SUPPORTED_DEVICES := eap225od-v1
+endef
+TARGET_DEVICES += eap225od-v1
+
 define Device/re355-v1
   $(Device/tplink-safeloader)
   DEVICE_TITLE := TP-LINK RE355 v1
